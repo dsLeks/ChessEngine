@@ -1,0 +1,29 @@
+1. Board Structure is created first. 
+    -> Implemented Castling permissions. These permissions are represented in the board structure simply by an integer in the board structure. 
+2. Undo-Move Structure
+3. We're using two boards. One 120 square board and another 64 square board. We also need to be able to quickly access the square numbers between each board. So we created a conversion array for that. 
+
+4. In this project, we will use a simple array representation for the majority of the pieces. We will have pawn bitboard representation to see if files are open. 
+
+
+BitHacks
+n is the number of bits to shift. 
+-> Setting a Bit : x = (1 << n) | x
+-> Clearing a Bit : x = ~(1 << n) & x
+-> Toggle a Bit : x = (1 << n) ^ x
+-> Check Bit : (x & (1 << n)) != 0
+-> Convert Trailing 0's to 1's : x = (x-1) | x 
+    Trailing 0's are any zeros on the very right hand side before there is an occurance of a bit set to 1
+-> Extracting the Least Significant 1 bit : x = x & -x where -x = ~x + 1
+-> Extracting the Most Significant 1 bit : x = x & ~(x-1)
+-> Counting 1's in Binary Representation : 
+    for(c = 0; x != 0; c++) {
+        (x = x & (x-1))
+    }
+    return c; // where c is the total count of 1's in the binary representation. 
+
+-> Bit Scan Forwards (BSF) : (Typically these are inbuilt)
+    Find the index of the lowest set bit
+
+120 is your OffBoard value!
+
