@@ -24,6 +24,8 @@ typedef uint64_t U64;
 
 #define MAXGAMEMOVES 2048 // Maximum number of moves (halfmoves) in a game. A game typically does not go over 1000 half moves.
 
+#define START_FEN "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" // Starting position of the boards
+
 // Piece definitions
 enum
 {
@@ -170,7 +172,7 @@ typedef struct
 } S_UNDO;
 
 // Board structure declaration
-typedef class Board
+typedef class S_BOARD
 {
 public:
     int board[BRD_SQ_NUM]; // The board is stored as an array of 120 integers. Each integer represents a square on the board. The value of the integer represents the piece on that square. Ex: board[A1] = wR means there is a white rook on A1.
@@ -189,15 +191,15 @@ public:
     U64 posKey; // A Unique key generated for each position.
 
     // These are used for position evaluation.
-    int pceNum[13]; // The number of pieces on the baord. Ex: pceNum[wP] = 8 means there are 8 white pawns on the board.
-    int bigPce[3];  // Anything that is not a pawn. Ex: bigPce[WHITE] = 3 means there are 3 white pieces on the board that are not pawns.
-    int majPce[3];  // Major pieces are rooks and queens. Ex: majPce[BLACK] = 2 means there are 2 black major pieces on the board.
-    int minPce[3];  // Minor pieces are bishops and knights. Ex: minPce[WHITE] = 2 means there are 2 white minor pieces on the board.
+    int pceNum[13];  // The number of pieces on the baord. Ex: pceNum[wP] = 8 means there are 8 white pawns on the board.
+    int bigPce[2];   // Anything that is not a pawn. Ex: bigPce[WHITE] = 3 means there are 3 white pieces on the board that are not pawns.
+    int majPce[2];   // Major pieces are rooks and queens. Ex: majPce[BLACK] = 2 means there are 2 black major pieces on the board.
+    int minPce[2];   // Minor pieces are bishops and knights. Ex: minPce[WHITE] = 2 means there are 2 white minor pieces on the board.
+    int material[2]; // Holds Material score for black and white.
 
     S_UNDO history[MAXGAMEMOVES]; // Array of undo structures. Each undo structure stores the move, castlePerm, enPas, fiftyMove, and posKey for a given move.
 
     int pList[13][10]; // List of pieces. Ex: pList[wP][0] = 21 means the first white pawn is on square 21. This is initliazed to no square at first.
-
 } S_BOARD;
 
 /*Macros*/
@@ -217,9 +219,26 @@ extern U64 PieceKeys[13][120];      // Piece keys will hash a random number for 
 extern U64 SideKey;                 // Side to move key will hash a random number if it is white to move. If it is black to move it will hash a different random number.
 extern U64 CastleKeys[16];
 
+// Array of characters for printing the board.
+extern char PceChar[];
+extern char SideChar[];
+extern char RankChar[];
+extern char FileChar[];
+
+// Arrays for piece information.
+extern bool PieceBig[13];
+extern bool PieceMaj[13];
+extern bool PieceMin[13];
+extern int PieceVal[13];
+extern int PieceCol[13];
+
 extern void AllInit();
 extern void InitSq120To64();
-extern void PrintBoard(U64 board);
+extern void PrintBitBoard(U64 board);
 extern int PopBit(U64 *bb);
 extern int CountBits(U64 b);
 extern void ResetBoard(S_BOARD *pos);
+extern U64 GeneratePosKey(const S_BOARD *pos);
+extern int ParseFen(const char *fen, S_BOARD *pos);
+extern void PrintBoard(const S_BOARD *pos);
+extern void UpdateListsMaterial(S_BOARD *pos);

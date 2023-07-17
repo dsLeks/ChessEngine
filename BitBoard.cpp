@@ -27,7 +27,7 @@ int CountBits(U64 b) // CountBits() counts the number of bits set to 1 in a 64-b
     return c;
 }
 
-void PrintBoard(U64 board)
+void PrintBitBoard(U64 board)
 {
     U64 shiftMe = 1ULL;
 

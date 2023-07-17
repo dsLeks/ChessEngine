@@ -1,25 +1,30 @@
 #include "defs.h"
+#include <iostream>
+#include <memory>
+#define FEN1 "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1"
+#define FEN2 "rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2"
+#define FEN3 "rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2"
 
 int main()
 {
     AllInit();
 
-    U64 playBitBoard = 0ULL;
+    S_BOARD board[1];
 
-    playBitBoard |= (1ULL << Sq120ToSq64[D2]);
-    playBitBoard |= (1ULL << Sq120ToSq64[D3]);
-    playBitBoard |= (1ULL << Sq120ToSq64[D4]);
+    ParseFen(FEN1, board);
+    PrintBoard(board);
 
-    PrintBoard(playBitBoard);
+    std::cout << "\n\n";
 
-    int count = CountBits(playBitBoard);
-    std::cout << "Count: " << count << std::endl
-              << std::endl;
+    ParseFen(FEN2, board);
+    PrintBoard(board);
 
-    int index = PopBit(&playBitBoard);
-    std::cout << "Index: " << index << std::endl;
+    std::cout << "\n\n";
 
-    PrintBoard(playBitBoard);
+    ParseFen(FEN3, board);
+    PrintBoard(board);
+
+    std::cout << "\n\n";
 
     return 0;
 }

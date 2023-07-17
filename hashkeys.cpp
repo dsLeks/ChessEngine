@@ -7,22 +7,19 @@
 U64 GeneratePosKey(const S_BOARD *pos)
 {
 
-    U64 finalKey = 0;
+    U64 finalKey = 0ULL;
 
     for (int sq; sq < 120; sq++)
     {
         int piece = pos->board[sq];
-        if (sq != NO_SQ && piece != EMPTY)
+        if (sq != NO_SQ && piece != EMPTY && piece != 120)
         {
             ASSERT(piece >= wP && piece <= bK);
             finalKey ^= PieceKeys[piece][sq];
         }
     }
 
-    if (pos->side == WHITE)
-    {
-        finalKey ^= SideKey;
-    }
+    return finalKey;
 
     if (pos->enPas != NO_SQ)
     {
