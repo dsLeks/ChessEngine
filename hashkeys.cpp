@@ -9,7 +9,7 @@ U64 GeneratePosKey(const S_BOARD *pos)
 
     U64 finalKey = 0ULL;
 
-    for (int sq; sq < 120; sq++)
+    for (int sq = 0; sq < 120; sq++)
     {
         int piece = pos->board[sq];
         if (sq != NO_SQ && piece != EMPTY && piece != 120)
@@ -19,11 +19,9 @@ U64 GeneratePosKey(const S_BOARD *pos)
         }
     }
 
-    return finalKey;
-
     if (pos->enPas != NO_SQ)
     {
-        ASSERT(pose->enPas >= 0 && pos->enPas < 120);
+        ASSERT(pos->enPas >= 0 && pos->enPas < 120);
         finalKey ^= PieceKeys[EMPTY][pos->enPas];
     }
 

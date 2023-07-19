@@ -2,9 +2,23 @@
 #include <stdlib.h>
 
 #define DEBUG ;
+// #ifdef DEBUG
+// #define ASSERT(n)                                        \
+//     if (!(n))                                            \
+//     {                                                    \
+//         std::cout << "ASSERTION FAILED!!!" << std::endl; \
+//         std::cout << "File: " << __FILE__ << std::endl;  \
+//         std::cout << "Line: " << __LINE__ << std::endl;  \
+//         std::cout << "Date: " << __DATE__ << std::endl;  \
+//         std::cout << "Time: " << __TIME__ << std::endl;  \
+//         std::cout << "Func: " << __func__ << std::endl;  \
+//         exit(1);                                         \
+//     }
+// #else
+// #define ASSERT(n)
+// #endif
 
-// Used for debugging. If the program is compiled with the DEBUG flag, then the ASSERT macro will be defined as an empty macro. Otherwise, the ASSERT macro will be defined as a macro that prints the line number, file name, and date and time of the error.
-#ifdef DEBUG
+#ifndef DEBUG
 #define ASSERT(n)
 #else
 #define ASSERT(n)                         \
@@ -232,6 +246,9 @@ extern bool PieceMin[13];
 extern int PieceVal[13];
 extern int PieceCol[13];
 
+extern int FilesBrd[BRD_SQ_NUM];
+extern int RanksBrd[BRD_SQ_NUM];
+
 extern void AllInit();
 extern void InitSq120To64();
 extern void PrintBitBoard(U64 board);
@@ -242,3 +259,5 @@ extern U64 GeneratePosKey(const S_BOARD *pos);
 extern int ParseFen(const char *fen, S_BOARD *pos);
 extern void PrintBoard(const S_BOARD *pos);
 extern void UpdateListsMaterial(S_BOARD *pos);
+extern void InitFilesRankBrd();
+extern bool CheckBoard(const S_BOARD *pos);

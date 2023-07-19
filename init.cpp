@@ -12,6 +12,28 @@ U64 PieceKeys[13][120];
 U64 SideKey; // Side to move key will hash a random number if it is white to move. If it is black to move it will hash a different random number.
 U64 CastleKeys[16];
 
+int FilesBrd[BRD_SQ_NUM];
+int RanksBrd[BRD_SQ_NUM];
+
+void InitFilesRankBrd()
+{
+    for (int index = 0; index < BRD_SQ_NUM; ++index)
+    {
+        FilesBrd[index] = 120;
+        RanksBrd[index] = 120;
+    }
+
+    for (int rank = RANK_1; rank <= RANK_8; rank++)
+    {
+        for (int file = FILE_A; file <= FILE_H; file++)
+        {
+            int sq = FR2SQ(file, rank);
+            FilesBrd[sq] = file;
+            RanksBrd[sq] = rank;
+        }
+    }
+}
+
 void InitHashKeys()
 {
     for (int i = 0; i < 13; i++)
@@ -52,7 +74,6 @@ void InitSq120To64()
     int index = 0;
     int file = FILE_A;
     int rank = RANK_1;
-    int sq = A1;
     int sq64 = 0;
 
     // Initialize all squares in the Sq64ToSq120 array to 120 (off board)
@@ -84,4 +105,5 @@ void AllInit()
     InitSq120To64();
     InitBitMasks();
     InitHashKeys();
+    InitFilesRankBrd();
 }

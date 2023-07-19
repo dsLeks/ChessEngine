@@ -1,8 +1,98 @@
 #include <stdio.h>
 #include "defs.h"
 
+bool CheckBoard(const S_BOARD *pos)
+{
+
+    int t_pceNum[13] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    int t_bigPce[2] = {0, 0};
+    int t_majPce[2] = {0, 0};
+    int t_minPce[2] = {0, 0};
+    int t_material[2] = {0, 0};
+
+    U64 t_pawns[3] = {0ULL, 0ULL, 0ULL};
+
+    t_pawns[WHITE] = pos->pawns[WHITE];
+    t_pawns[BLACK] = pos->pawns[BLACK];
+    t_pawns[BOTH] = pos->pawns[BOTH];
+
+    for (int t_piece = wP; t_piece <= bK; t_piece++)
+    {
+        for (int t_piece_num = 0; t_piece_num < pos->pceNum[t_piece]; t_piece_num++)
+        {
+            int sq120 = pos->pList[t_piece][t_piece_num];
+            ASSERT(pos->board[sq120] == t_piece);
+        }
+    }
+
+    // Go through the board, check piece count and other counters;
+    for (int sq64 = 0; sq64 < 64; sq64++)
+    {
+        int sq120 = Sq64ToSq120[sq64];
+        int t_piece = pos->board[sq120];
+        int color = PieceCol[t_piece];
+        t_pceNum[t_piece] += 1;
+        if (PieceBig[t_piece] == TRUE)
+            t_bigPce[color]++;
+        if (PieceMin[t_piece] == TRUE)
+            t_minPce[color]++;
+        if (PieceMaj[t_piece] == TRUE)
+            t_majPce[color]++;
+
+        t_material[color] += PieceVal[t_piece];
+    }
+
+    for (int t_piece = wP; t_piece <= bK; t_piece++)
+    {
+        ASSERT(t_pceNum[t_piece] == pos->pceNum[t_piece]);
+    }
+
+    // Check the Bitboard count
+    int pCount = CountBits(t_pawns[WHITE]);
+    ASSERT(pCount == pos->pceNum[wP]);
+    pCount = CountBits(t_pawns[BLACK]);
+    ASSERT(pCount == pos->pceNum[bP]);
+    pCount = CountBits(t_pawns[BOTH]);
+    ASSERT(pCount == (pos->pceNum[bP] + pos->pceNum[wP]));
+
+    // check bitboard squares
+    while (t_pawns[WHITE])
+    {
+        int sq64 = PopBit(&t_pawns[WHITE]);
+        ASSERT(pos->board[Sq64ToSq120[sq64]] == wP);
+    }
+
+    while (t_pawns[BLACK])
+    {
+        int sq64 = PopBit(&t_pawns[BLACK]);
+        ASSERT(pos->board[Sq64ToSq120[sq64]] == bP);
+    }
+
+    while (t_pawns[BOTH])
+    {
+        int sq64 = PopBit(&t_pawns[BOTH]);
+        ASSERT((pos->board[Sq64ToSq120[sq64]] == bP) || (pos->board[Sq64ToSq120[sq64]] == wP));
+    }
+
+    ASSERT(t_material[WHITE] == pos->material[WHITE] && t_material[BLACK] == pos->material[BLACK]);
+    ASSERT(t_minPce[WHITE] == pos->minPce[WHITE] && t_minPce[BLACK] == pos->minPce[BLACK]);
+    ASSERT(t_majPce[WHITE] == pos->majPce[WHITE] && t_majPce[BLACK] == pos->majPce[BLACK]);
+    ASSERT(t_bigPce[WHITE] == pos->bigPce[WHITE] && t_bigPce[BLACK] == pos->bigPce[BLACK]);
+
+    ASSERT(pos->side == WHITE || pos->side == BLACK);
+    ASSERT(GeneratePosKey(pos) == pos->posKey);
+
+    ASSERT(pos->enPas == NO_SQ || (RanksBrd[pos->enPas] == RANK_6 && pos->side == WHITE) || (RanksBrd[pos->enPas] == RANK_3 && pos->side == BLACK));
+
+    ASSERT(pos->board[pos->KingSq[WHITE]] == wK);
+    ASSERT(pos->board[pos->KingSq[BLACK]] == bK);
+
+    return true;
+}
+
 void UpdateListsMaterial(S_BOARD *pos)
 {
+
     for (int index = 0; index < BRD_SQ_NUM; index++)
     {
         int sq = index;
@@ -25,6 +115,17 @@ void UpdateListsMaterial(S_BOARD *pos)
                 pos->KingSq[WHITE] = sq;
             if (piece == bK)
                 pos->KingSq[BLACK] = sq;
+
+            if (piece == wP)
+            {
+                SETBIT(pos->pawns[WHITE], Sq120ToSq64[sq]);
+                SETBIT(pos->pawns[BOTH], Sq120ToSq64[sq]);
+            }
+            else if (piece == bP)
+            {
+                SETBIT(pos->pawns[BLACK], Sq120ToSq64[sq]);
+                SETBIT(pos->pawns[BOTH], Sq120ToSq64[sq]);
+            }
         }
     }
 }
@@ -163,6 +264,8 @@ int ParseFen(const char *fen, S_BOARD *pos)
 
     pos->posKey = GeneratePosKey(pos);
 
+    UpdateListsMaterial(pos);
+
     return 0;
 }
 
@@ -205,6 +308,7 @@ void ResetBoard(S_BOARD *pos)
 
 void PrintBoard(const S_BOARD *pos)
 {
+
     for (int rank = RANK_8; rank >= RANK_1; rank--)
     {
         std::cout << rank + 1 << "  ";
@@ -233,4 +337,6 @@ void PrintBoard(const S_BOARD *pos)
                                                             : '-' << pos->castlePerm && BQCA   ? 'q'
                                                                                                : '-';
     std::cout << std::endl;
+
+    std::cout << "PosKey : " << pos->posKey << std::endl;
 }
