@@ -527,9 +527,60 @@ void GenerateAllNonSlidingPiecesMoves(const S_BOARD *pos, S_MOVELIST *moveList)
     }
 }
 
+void GenerateCastlingMoves(const S_BOARD *pos, S_MOVELIST *moveList)
+{
+    if (pos->side == WHITE)
+    {
+        if (pos->castlePerm & WKCA)
+        {
+            if (pos->board[F1] == EMPTY && pos->board[G1] == EMPTY)
+            {
+                if (!SqAttacked(E1, BLACK, pos) && !SqAttacked(F1, BLACK, pos))
+                {
+                    std::cout << "WKCA MoveGen!" << std::endl;
+                }
+            }
+        }
+        if (pos->castlePerm & WQCA)
+        {
+            if (pos->board[D1] == EMPTY && pos->board[C1] == EMPTY)
+            {
+                if (!SqAttacked(E1, BLACK, pos) && !SqAttacked(D1, BLACK, pos))
+                {
+                    std::cout << "WQCA MoveGen!" << std::endl;
+                }
+            }
+        }
+    }
+    else
+    {
+        if (pos->castlePerm & BKCA)
+        {
+            if (pos->board[F8] == EMPTY && pos->board[G8] == EMPTY)
+            {
+                if (!SqAttacked(E8, WHITE, pos) && !SqAttacked(F8, WHITE, pos))
+                {
+                    std::cout << "BKCA MoveGen!" << std::endl;
+                }
+            }
+        }
+        if (pos->castlePerm & BQCA)
+        {
+            if (pos->board[D8] == EMPTY && pos->board[C8] == EMPTY)
+            {
+                if (!SqAttacked(E8, WHITE, pos) && !SqAttacked(D8, WHITE, pos))
+                {
+                    std::cout << "BQCA MoveGen!" << std::endl;
+                }
+            }
+        }
+    }
+}
+
 void GenerateAllMoves(const S_BOARD *pos, S_MOVELIST *moveList)
 {
     // GenerateAllPawnMoves(pos, moveList);
-    GenerateAllSlidingPiecesMoves(pos, moveList);
+    // GenerateAllSlidingPiecesMoves(pos, moveList);
     // GenerateAllNonSlidingPiecesMoves(pos, moveList);
+    GenerateCastlingMoves(pos, moveList);
 }
