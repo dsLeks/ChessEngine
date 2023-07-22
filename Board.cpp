@@ -286,6 +286,7 @@ void ResetBoard(S_BOARD *pos)
         pos->bigPce[i] = 0;
         pos->majPce[i] = 0;
         pos->minPce[i] = 0;
+        pos->material[i] = 0;
         pos->pawns[i] = 0ULL;
     }
 

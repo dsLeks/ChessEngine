@@ -2,21 +2,6 @@
 #include <stdlib.h>
 
 #define DEBUG ;
-// #ifdef DEBUG
-// #define ASSERT(n)                                        \
-//     if (!(n))                                            \
-//     {                                                    \
-//         std::cout << "ASSERTION FAILED!!!" << std::endl; \
-//         std::cout << "File: " << __FILE__ << std::endl;  \
-//         std::cout << "Line: " << __LINE__ << std::endl;  \
-//         std::cout << "Date: " << __DATE__ << std::endl;  \
-//         std::cout << "Time: " << __TIME__ << std::endl;  \
-//         std::cout << "Func: " << __func__ << std::endl;  \
-//         exit(1);                                         \
-//     }
-// #else
-// #define ASSERT(n)
-// #endif
 
 #ifndef DEBUG
 #define ASSERT(n)
@@ -36,7 +21,8 @@
 typedef uint64_t U64;
 #define BRD_SQ_NUM 120 // 120 squares on the board
 
-#define MAXGAMEMOVES 2048 // Maximum number of moves (halfmoves) in a game. A game typically does not go over 1000 half moves.
+#define MAXGAMEMOVES 2048    // Maximum number of moves (halfmoves) in a game. A game typically does not go over 1000 half moves.
+#define MAXPOSITIONMOVES 256 // Maximum number of positions that can be expected for a given position.
 
 #define START_FEN "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" // Starting position of the boards
 
@@ -179,6 +165,18 @@ enum
 typedef struct
 {
     int move;
+    int score;
+} S_MOVE;
+
+typedef struct
+{
+    S_MOVE moves[MAXPOSITIONMOVES];
+    int count;
+} S_MOVELIST;
+
+typedef struct
+{
+    int move;
     int castlePerm;
     int enPas;
     int fiftyMove;
@@ -216,11 +214,40 @@ public:
     int pList[13][10]; // List of pieces. Ex: pList[wP][0] = 21 means the first white pawn is on square 21. This is initliazed to no square at first.
 } S_BOARD;
 
+// Note: My Offboard is 120.
+
+/* -- GAME MOVE -- */
+/*
+0000 0000 0000 0000 0000 0111 1111 -> From 0x7F
+0000 0000 0000 0011 1111 1000 0000 -> To >> 7, 0x7F
+0000 0000 0011 1100 0000 0000 0000 -> Captured >> 14, 0xF
+0000 0000 0100 0000 0000 0000 0000 -> EP 0x40000
+0000 0000 1000 0000 0000 0000 0000 -> Pawn Start 0x80000
+0000 1111 0000 0000 0000 0000 0000 -> Promoted Piece >> 20, 0xF
+0001 0000 0000 0000 0000 0000 0000 -> Castle 0x1000000
+*/
+
+#define FROMSQ(m) ((m)&0x7F)            // Returns the from square of a move.
+#define TOSQ(m) (((m) >> 7) & 0x7F)     // Returns the to square of a move.
+#define CAPTURED(m) (((m) >> 14) & 0xF) // Returns the captured piece of a move.
+#define PROMOTED(m) (((m) >> 20) & 0xF) // Returns the promoted piece of a move.
+#define MFLAGEP 0x40000                 // En Passant flag.
+#define MFLAGPS 0x80000                 // Pawn Start flag.
+#define MFLAGCA 0x1000000               // Castle flag.
+
+#define MFLAGCAP 0x7C000   // This flag will tell us if the move was a capturing move. Did it capture something in the move?
+#define MFLAGPROM 0xF00000 // Was the move a promotion?
+
 /*Macros*/
 /*-------*/
 #define FR2SQ(f, r) ((21 + (f)) + ((r)*10))       // Given a File (f) and Rank (r) it returns the corresponding square on the 120 square board.
 #define CLRBIT(bb, sq) ((bb) &= ClearMask[(sq)]); // Clearss a bit on a bitboard.
 #define SETBIT(bb, sq) ((bb) |= SetMask[(sq)]);   // Sets a bit on a bitboard.
+
+#define IsBQ(p) (PieceBishopQueen[(p)])
+#define IsRQ(p) (PieceRookQueen[(p)])
+#define IsKn(p) (PieceKnight[(p)])
+#define IsKi(p) (PieceKing[(p)])
 
 /* GLOBALS */
 /*----------*/
@@ -245,6 +272,18 @@ extern bool PieceMaj[13];
 extern bool PieceMin[13];
 extern int PieceVal[13];
 extern int PieceCol[13];
+extern bool PieceSlides[13];
+extern int knightMoves[8];
+extern int kingMoves[8];
+extern int bishopMoves[4];
+extern int rookMoves[4];
+extern int queenMoves[8];
+
+// To get the type of piece. i.e. is it a knight, king, rook/queen, or bishop/queen?
+extern bool PieceKnight[13];
+extern bool PieceKing[13];
+extern bool PieceRookQueen[13];
+extern bool PieceBishopQueen[13];
 
 extern int FilesBrd[BRD_SQ_NUM];
 extern int RanksBrd[BRD_SQ_NUM];
@@ -261,3 +300,13 @@ extern void PrintBoard(const S_BOARD *pos);
 extern void UpdateListsMaterial(S_BOARD *pos);
 extern void InitFilesRankBrd();
 extern bool CheckBoard(const S_BOARD *pos);
+extern int SqAttacked(const int sq, const int side, const S_BOARD *pos);
+extern char *PrSq(const int sq);
+extern char *PrMove(const int move);
+extern int SqOnBoard(const int sq);
+extern int SideValid(const int side);
+extern int FileRankValid(const int fr);
+extern int PieceValidEmpty(const int pce);
+extern int PieceValid(const int pce);
+extern void PrintMoveList(const S_MOVELIST *moveList);
+extern void GenerateAllMoves(const S_BOARD *pos, S_MOVELIST *moveList);
