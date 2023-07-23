@@ -281,7 +281,7 @@ void ResetBoard(S_BOARD *pos)
         pos->board[Sq64ToSq120[i]] = EMPTY;
     }
 
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 2; i++)
     {
         pos->bigPce[i] = 0;
         pos->majPce[i] = 0;

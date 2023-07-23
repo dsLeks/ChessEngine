@@ -204,8 +204,6 @@ void GenerateAllSlidingPiecesMoves(const S_BOARD *pos, S_MOVELIST *moveList)
             int sq = pos->pList[wB][pceNum];
             ASSERT(SqOnBoard(sq));
 
-            std::cout << "Move For white Bishop on: " << PrSq(sq) << std::endl;
-
             for (int dir = 0; dir < 4; dir++)
             {
                 int t_sq = sq + bishopMoves[dir];
@@ -216,14 +214,14 @@ void GenerateAllSlidingPiecesMoves(const S_BOARD *pos, S_MOVELIST *moveList)
                     {
                         if (PieceCol[pos->board[t_sq]] == BLACK)
                         {
-                            std::cout << "\t\t Caputre on: " << PrSq(t_sq) << std::endl;
+                            AddCaptureMove(pos, MOVE(sq, t_sq, pos->board[t_sq], EMPTY, 0), moveList);
                         }
 
                         break;
                     }
                     else
                     {
-                        std::cout << "\t\t Normal Move: " << PrSq(t_sq) << std::endl;
+                        AddQuietMove(pos, MOVE(sq, t_sq, EMPTY, EMPTY, 0), moveList);
                     }
 
                     t_sq += bishopMoves[dir];
@@ -240,8 +238,6 @@ void GenerateAllSlidingPiecesMoves(const S_BOARD *pos, S_MOVELIST *moveList)
             int sq = pos->pList[wR][pceNum];
             ASSERT(SqOnBoard(sq));
 
-            std::cout << "Move For white Rook on: " << PrSq(sq) << std::endl;
-
             for (int dir = 0; dir < 4; dir++)
             {
                 int t_sq = sq + rookMoves[dir];
@@ -252,13 +248,13 @@ void GenerateAllSlidingPiecesMoves(const S_BOARD *pos, S_MOVELIST *moveList)
                     {
                         if (PieceCol[pos->board[t_sq]] == BLACK)
                         {
-                            std::cout << "\t\t Caputre on: " << PrSq(t_sq) << std::endl;
+                            AddCaptureMove(pos, MOVE(sq, t_sq, pos->board[t_sq], EMPTY, 0), moveList);
                         }
                         break;
                     }
                     else
                     {
-                        std::cout << "\t\t Normal Move: " << PrSq(t_sq) << std::endl;
+                        AddQuietMove(pos, MOVE(sq, t_sq, EMPTY, EMPTY, 0), moveList);
                     }
 
                     t_sq += rookMoves[dir];
@@ -275,8 +271,6 @@ void GenerateAllSlidingPiecesMoves(const S_BOARD *pos, S_MOVELIST *moveList)
             int sq = pos->pList[wQ][pceNum];
             ASSERT(SqOnBoard(sq));
 
-            std::cout << "Move For white Queen on: " << PrSq(sq) << std::endl;
-
             for (int dir = 0; dir < 8; dir++)
             {
                 int t_sq = sq + queenMoves[dir];
@@ -287,14 +281,14 @@ void GenerateAllSlidingPiecesMoves(const S_BOARD *pos, S_MOVELIST *moveList)
                     {
                         if (PieceCol[pos->board[t_sq]] == BLACK)
                         {
-                            std::cout << "\t\t Caputre on: " << PrSq(t_sq) << std::endl;
+                            AddCaptureMove(pos, MOVE(sq, t_sq, pos->board[t_sq], EMPTY, 0), moveList);
                         }
 
                         break;
                     }
                     else
                     {
-                        std::cout << "\t\t Normal Move: " << PrSq(t_sq) << std::endl;
+                        AddQuietMove(pos, MOVE(sq, t_sq, EMPTY, EMPTY, 0), moveList);
                     }
 
                     t_sq += queenMoves[dir];
@@ -313,8 +307,6 @@ void GenerateAllSlidingPiecesMoves(const S_BOARD *pos, S_MOVELIST *moveList)
             int sq = pos->pList[bB][pceNum];
             ASSERT(SqOnBoard(sq));
 
-            std::cout << "Move For black bishop on: " << PrSq(sq) << std::endl;
-
             for (int dir = 0; dir < 4; dir++)
             {
                 int t_sq = sq + bishopMoves[dir];
@@ -325,14 +317,14 @@ void GenerateAllSlidingPiecesMoves(const S_BOARD *pos, S_MOVELIST *moveList)
                     {
                         if (PieceCol[pos->board[t_sq]] == WHITE)
                         {
-                            std::cout << "\t\t Caputre on: " << PrSq(t_sq) << std::endl;
+                            AddCaptureMove(pos, MOVE(sq, t_sq, pos->board[t_sq], EMPTY, 0), moveList);
                         }
 
                         break;
                     }
                     else
                     {
-                        std::cout << "\t\t Normal Move: " << PrSq(t_sq) << std::endl;
+                        AddQuietMove(pos, MOVE(sq, t_sq, EMPTY, EMPTY, 0), moveList);
                     }
 
                     t_sq += bishopMoves[dir];
@@ -349,8 +341,6 @@ void GenerateAllSlidingPiecesMoves(const S_BOARD *pos, S_MOVELIST *moveList)
             int sq = pos->pList[bR][pceNum];
             ASSERT(SqOnBoard(sq));
 
-            std::cout << "Move For black rook on: " << PrSq(sq) << std::endl;
-
             for (int dir = 0; dir < 4; dir++)
             {
                 int t_sq = sq + rookMoves[dir];
@@ -361,14 +351,14 @@ void GenerateAllSlidingPiecesMoves(const S_BOARD *pos, S_MOVELIST *moveList)
                     {
                         if (PieceCol[pos->board[t_sq]] == WHITE)
                         {
-                            std::cout << "\t\t Caputre on: " << PrSq(t_sq) << std::endl;
+                            AddCaptureMove(pos, MOVE(sq, t_sq, pos->board[t_sq], EMPTY, 0), moveList);
                         }
 
                         break;
                     }
                     else
                     {
-                        std::cout << "\t\t Normal Move: " << PrSq(t_sq) << std::endl;
+                        AddQuietMove(pos, MOVE(sq, t_sq, EMPTY, EMPTY, 0), moveList);
                     }
 
                     t_sq += rookMoves[dir];
@@ -385,8 +375,6 @@ void GenerateAllSlidingPiecesMoves(const S_BOARD *pos, S_MOVELIST *moveList)
             int sq = pos->pList[bQ][pceNum];
             ASSERT(SqOnBoard(sq));
 
-            std::cout << "Move For black queen on: " << PrSq(sq) << std::endl;
-
             for (int dir = 0; dir < 8; dir++)
             {
                 int t_sq = sq + queenMoves[dir];
@@ -397,14 +385,14 @@ void GenerateAllSlidingPiecesMoves(const S_BOARD *pos, S_MOVELIST *moveList)
                     {
                         if (PieceCol[pos->board[t_sq]] == WHITE)
                         {
-                            std::cout << "\t\t Caputre on: " << PrSq(t_sq) << std::endl;
+                            AddCaptureMove(pos, MOVE(sq, t_sq, pos->board[t_sq], EMPTY, 0), moveList);
                         }
 
                         break;
                     }
                     else
                     {
-                        std::cout << "\t\t Normal Move: " << PrSq(t_sq) << std::endl;
+                        AddQuietMove(pos, MOVE(sq, t_sq, EMPTY, EMPTY, 0), moveList);
                     }
 
                     t_sq += queenMoves[dir];
@@ -440,11 +428,11 @@ void GenerateAllNonSlidingPiecesMoves(const S_BOARD *pos, S_MOVELIST *moveList)
                 {
                     if (PieceCol[pos->board[t_sq]] == BLACK)
                     {
-                        std::cout << "\t\t Caputre on: " << PrSq(t_sq) << std::endl;
+                        AddCaptureMove(pos, MOVE(sq, t_sq, pos->board[t_sq], EMPTY, 0), moveList);
                     }
                     continue;
                 }
-                std::cout << "\t\t Normal Move: " << PrSq(t_sq) << std::endl;
+                AddQuietMove(pos, MOVE(sq, t_sq, EMPTY, EMPTY, 0), moveList);
             }
         }
 
@@ -465,11 +453,11 @@ void GenerateAllNonSlidingPiecesMoves(const S_BOARD *pos, S_MOVELIST *moveList)
                 {
                     if (PieceCol[pos->board[t_sq]] == BLACK)
                     {
-                        std::cout << "\t\t Caputre on: " << PrSq(t_sq) << std::endl;
+                        AddCaptureMove(pos, MOVE(sq, t_sq, pos->board[t_sq], EMPTY, 0), moveList);
                     }
                     continue;
                 }
-                std::cout << "\t\t Normal Move: " << PrSq(t_sq) << std::endl;
+                AddQuietMove(pos, MOVE(sq, t_sq, EMPTY, EMPTY, 0), moveList);
             }
         }
     }
@@ -492,11 +480,11 @@ void GenerateAllNonSlidingPiecesMoves(const S_BOARD *pos, S_MOVELIST *moveList)
                 {
                     if (PieceCol[pos->board[t_sq]] == WHITE)
                     {
-                        std::cout << "\t\t Capture on: " << PrSq(t_sq) << std::endl;
+                        AddCaptureMove(pos, MOVE(sq, t_sq, pos->board[t_sq], EMPTY, 0), moveList);
                     }
                     continue;
                 }
-                std::cout << "\t\t Normal Move: " << PrSq(t_sq) << std::endl;
+                AddQuietMove(pos, MOVE(sq, t_sq, EMPTY, EMPTY, 0), moveList);
             }
         }
 
@@ -517,11 +505,11 @@ void GenerateAllNonSlidingPiecesMoves(const S_BOARD *pos, S_MOVELIST *moveList)
                 {
                     if (PieceCol[pos->board[t_sq]] == WHITE)
                     {
-                        std::cout << "\t\t Caputre on: " << PrSq(t_sq) << std::endl;
+                        AddCaptureMove(pos, MOVE(sq, t_sq, pos->board[t_sq], EMPTY, 0), moveList);
                     }
                     continue;
                 }
-                std::cout << "\t\t Normal Move: " << PrSq(t_sq) << std::endl;
+                AddQuietMove(pos, MOVE(sq, t_sq, EMPTY, EMPTY, 0), moveList);
             }
         }
     }
@@ -537,7 +525,7 @@ void GenerateCastlingMoves(const S_BOARD *pos, S_MOVELIST *moveList)
             {
                 if (!SqAttacked(E1, BLACK, pos) && !SqAttacked(F1, BLACK, pos))
                 {
-                    std::cout << "WKCA MoveGen!" << std::endl;
+                    AddQuietMove(pos, MOVE(E1, G1, EMPTY, EMPTY, MFLAGCA), moveList);
                 }
             }
         }
@@ -547,7 +535,7 @@ void GenerateCastlingMoves(const S_BOARD *pos, S_MOVELIST *moveList)
             {
                 if (!SqAttacked(E1, BLACK, pos) && !SqAttacked(D1, BLACK, pos))
                 {
-                    std::cout << "WQCA MoveGen!" << std::endl;
+                    AddQuietMove(pos, MOVE(E1, C1, EMPTY, EMPTY, MFLAGCA), moveList);
                 }
             }
         }
@@ -560,7 +548,7 @@ void GenerateCastlingMoves(const S_BOARD *pos, S_MOVELIST *moveList)
             {
                 if (!SqAttacked(E8, WHITE, pos) && !SqAttacked(F8, WHITE, pos))
                 {
-                    std::cout << "BKCA MoveGen!" << std::endl;
+                    AddQuietMove(pos, MOVE(E8, G8, EMPTY, EMPTY, MFLAGCA), moveList);
                 }
             }
         }
@@ -570,7 +558,7 @@ void GenerateCastlingMoves(const S_BOARD *pos, S_MOVELIST *moveList)
             {
                 if (!SqAttacked(E8, WHITE, pos) && !SqAttacked(D8, WHITE, pos))
                 {
-                    std::cout << "BQCA MoveGen!" << std::endl;
+                    AddQuietMove(pos, MOVE(E8, C8, EMPTY, EMPTY, MFLAGCA), moveList);
                 }
             }
         }
@@ -579,8 +567,8 @@ void GenerateCastlingMoves(const S_BOARD *pos, S_MOVELIST *moveList)
 
 void GenerateAllMoves(const S_BOARD *pos, S_MOVELIST *moveList)
 {
-    // GenerateAllPawnMoves(pos, moveList);
-    // GenerateAllSlidingPiecesMoves(pos, moveList);
-    // GenerateAllNonSlidingPiecesMoves(pos, moveList);
+    GenerateAllPawnMoves(pos, moveList);
+    GenerateAllSlidingPiecesMoves(pos, moveList);
+    GenerateAllNonSlidingPiecesMoves(pos, moveList);
     GenerateCastlingMoves(pos, moveList);
 }
